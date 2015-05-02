@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Bench</title>
+    <script src="node_modules/lodash/index.js"></script>
+    <script src="node_modules/platform/platform.js"></script>
+    <script src="node_modules/benchtable/node_modules/benchmark/benchmark.js"></script>
+    <script src="node_modules/perfget/dist/perfget.min.js"></script>
+    <script src="setup.js"></script>
+    <script src="createScenario.js"></script>
+    <script src="strategies.js"></script>
+    <script src="suite.js"></script>
+</head>
+<body>
+<script>
+    /*
+
+     /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --enable-benchmarking
+
+        switch to incognito mode to disable plugins
+     */
+
+    if (typeof console !== 'object') {
+        console = {};
+    }
+    var olog = console.log;
+    var pre = document.body.appendChild(document.createElement('pre'));
+    console.log = function (line) {
+        pre.insertAdjacentHTML('beforeEnd', '<p>' + line + '</p>');
+    };
+
+    [
+//        ['short path',          setup.obj,  setup.arrayPaths[2],        setup.obj.a.b],
+//        ['short failed obj',    {},         setup.arrayPaths[2],        undefined],
+//        ['short failed path',   setup.obj,  setup.failedArrayPaths[2],  undefined],
+        ['medium path',         setup.obj,  setup.arrayPaths[7],        setup.obj.a.b.c.d.e.f.g]
+//        ['medium failed obj',   {},         setup.arrayPaths[7],        undefined],
+//        ['medium failed path',  setup.obj,  setup.failedArrayPaths[7],  undefined],
+//        ['long path',           setup.obj,  setup.arrayPaths[20],       setup.obj.a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t],
+//        ['long failed obj',     {},         setup.arrayPaths[20],       undefined],
+//        ['long faied path',     setup.obj,  setup.failedArrayPaths[20], undefined]
+    ].map(createScenario(Benchmark, strategies))
+        .forEach(run);
+</script>
+</body>
+</html>
